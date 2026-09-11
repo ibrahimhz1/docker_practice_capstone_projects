@@ -1,0 +1,45 @@
+services: 
+  guestbook-pg-db:
+    container_name: guestbook-pg-db-cont
+    restart: unless-stopped
+    image: postgres:18-alpine
+    volumes:
+      - pg-db-data:/var/lib/postgresql
+    ports: 
+      - "5432:5432"
+    networks:
+      - guestbook-app-network
+    environment: 
+      POSTGRES_PASSWORD: mysecretpassword
+      
+    
+
+  guestbook-backend-api:
+    container_name: guestbook-backend-api-cont
+    depends_on: 
+      - guestbook-pg-db
+    restart: unless-stopped
+    build: 
+      context: backend-api/
+    ports: 
+      - "4000:4000"
+    networks: 
+      - guestbook-app-network
+    environment:
+      - PGHOST=guestbook-pg-db
+      - PGPORT=5432
+      - PGUSER=postgres
+      - PGPASSWORD=mysecretpassword
+      - PGDATABASE=postgres
+      - SERVE_STATIC=1
+
+volumes:
+  pg-db-data: 
+    driver_opts:
+      type: none
+      o: bind
+      device: srv/guestbook-app-volume/pg-db-data
+
+networks:
+  guestbook-app-network:
+    driver: bridge
