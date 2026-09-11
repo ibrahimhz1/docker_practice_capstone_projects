@@ -4,7 +4,7 @@ services:
     restart: unless-stopped
     image: postgres:18-alpine
     volumes:
-      - pg-db-data:/var/lib/postgresql/data
+      - pg-db-data:/var/lib/postgresql
     ports: 
       - "5432:5432"
     networks:
