@@ -34,6 +34,7 @@ services:
       - PGPASSWORD=mysecretpassword
       - PGDATABASE=postgres
       - SERVE_STATIC=1
+      - PORT=4000
 
 volumes:
   pg-db-data: 
