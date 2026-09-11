@@ -21,7 +21,7 @@ services:
       - guestbook-pg-db
     restart: unless-stopped
     build: 
-      context: backend-api/
+      context: ./backend-api/
       dockerfile: Dockerfile
     ports: 
       - "4000:4000"
@@ -35,6 +35,20 @@ services:
       - PGDATABASE=postgres
       - SERVE_STATIC=1
       - PORT=4000
+
+  guestbook-frontend-app:
+    container_name: guestbook-frontend-app-cont
+    depends_on: 
+      - guestbook-backend-api
+    restart: unless-stopped
+    build:
+      context: ./frontend/
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - guestbook-app-network
+
 
 volumes:
   pg-db-data: 
