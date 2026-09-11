@@ -4,15 +4,16 @@ services:
     restart: unless-stopped
     image: postgres:18-alpine
     volumes:
-      - pg-db-data:/var/lib/postgresql
+      - pg-db-data:/var/lib/postgresql/data
     ports: 
       - "5432:5432"
     networks:
       - guestbook-app-network
-    environment: 
-      POSTGRES_PASSWORD: mysecretpassword
-      
-    
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=mysecretpassword
+      - POSTGRES_DB=postgres
+
 
   guestbook-backend-api:
     container_name: guestbook-backend-api-cont
@@ -21,6 +22,7 @@ services:
     restart: unless-stopped
     build: 
       context: backend-api/
+      dockerfile: Dockerfile
     ports: 
       - "4000:4000"
     networks: 
@@ -38,7 +40,7 @@ volumes:
     driver_opts:
       type: none
       o: bind
-      device: srv/guestbook-app-volume/pg-db-data
+      device: /srv/guestbook-app/guestbook-app-volume/pg-db-data
 
 networks:
   guestbook-app-network:
